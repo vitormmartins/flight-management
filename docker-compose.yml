@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  # MySQL 8.3 Database
+  mysql:
+    image: mysql:8.3
+    container_name: flight-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: flightdb
+      MYSQL_USER: flightuser
+      MYSQL_PASSWORD: flightpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - flight-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command: --default-authentication-plugin=mysql_native_password
+
+  # Flight Management Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: flight-management:latest
+    container_name: flight-app
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Spring profiles
+      SPRING_PROFILES_ACTIVE: docker
+
+      # Database configuration
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/flightdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: flightuser
+      SPRING_DATASOURCE_PASSWORD: flightpassword
+
+      # JPA configuration
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: false
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+
+      # CrazySupplier configuration
+      CRAZY_SUPPLIER_BASE_URL: https://api.crazy-supplier.com
+      CRAZY_SUPPLIER_TIMEOUT: 5000
+
+      # Logging
+      LOGGING_LEVEL_COM_FLIGHTDATA: INFO
+      LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: WARN
+    ports:
+      - "8080:8080"
+    networks:
+      - flight-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  # phpMyAdmin for database management (optional, for development)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: flight-phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+    ports:
+      - "8081:80"
+    networks:
+      - flight-network
+    profiles:
+      - dev
+
+networks:
+  flight-network:
+    driver: bridge
+    name: flight-network
+
+volumes:
+  mysql-data:
+    driver: local
+    name: flight-mysql-data
