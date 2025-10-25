@@ -183,7 +183,6 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <skip>true</skip>
                             <inputSpec>${project.basedir}/src/main/resources/api/flight-api.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <apiPackage>com.flightdata.management.presentation.api</apiPackage>
