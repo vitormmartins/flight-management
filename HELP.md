@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.flightdata.flight-management' is invalid and this project uses 'com.flightdata.flight_management' instead.
+* The original package name 'com.flightdata.flight-management' is invalid and this project uses 'com.flightdata.management' instead.
 
 # Getting Started
 
