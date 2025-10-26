@@ -194,6 +194,9 @@
                             <modelPackage>com.flightdata.management.application.dto</modelPackage>
                             <supportingFilesToGenerate>ApiUtil.java</supportingFilesToGenerate>
                             <configOptions>
+                                <additionalModelTypeAnnotations>
+                                    @lombok.Builder
+                                </additionalModelTypeAnnotations>
                                 <delegatePattern>true</delegatePattern>
                                 <useSpringBoot3>true</useSpringBoot3>
                                 <interfaceOnly>true</interfaceOnly>
