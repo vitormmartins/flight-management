@@ -87,8 +87,8 @@ public class FlightDomainService {
             request.airline(),
             request.supplier(),
             request.fare(),
-            request.departureAirport(),
-            request.destinationAirport(),
+            normalizeAirportCode(request.departureAirport()),
+            normalizeAirportCode(request.destinationAirport()),
             request.departureTime(),
             request.arrivalTime());
 

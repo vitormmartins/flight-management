@@ -16,7 +16,7 @@ import java.util.List;
  * Repository interface for Flight entity operations.
  * Provides data access methods following Domain-Driven Design principles.
  *
- * @author Flight Data Management Team
+ * @author Vítor Matosinho Martins
  * @version 1.0
  * @since 2025-10-25
  */

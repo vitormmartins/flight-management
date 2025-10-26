@@ -6,7 +6,7 @@ info:
     and integration with external suppliers like CrazySupplier.
   version: 1.0.0
   contact:
-    name: Flight Data Management Team
+    name: Vítor Matosinho Martins
     email: support@flightdata.com
 
 servers:

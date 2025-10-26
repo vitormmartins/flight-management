@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p>MapStruct generates the mapper implementation during compilation,
  * so we can test it directly without Spring's dependency injection.
  *
- * @author Flight Data Management Team
+ * @author Vítor Matosinho Martins
  * @version 1.0
  * @since 2025-10-24
  */

@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 /**
  * Unit tests for FlightDomainService.
  *
- * @author Flight Data Management Team
+ * @author Vítor Matosinho Martins
  * @version 1.0
  * @since 2025-10-24
  */

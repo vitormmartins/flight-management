@@ -8,7 +8,7 @@ import java.time.Instant;
  * Domain entity representing a flight record.
  * This entity encapsulates the core business logic and invariants for flight data.
  *
- * @author Flight Data Management Team
+ * @author Vítor Matosinho Martins
  * @version 1.0
  * @since 2025-10-25
  */

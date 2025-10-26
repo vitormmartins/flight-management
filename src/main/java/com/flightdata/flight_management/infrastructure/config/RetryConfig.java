@@ -9,7 +9,7 @@ import org.springframework.retry.annotation.EnableRetry;
  * <p>Enables declarative retry logic using @Retryable annotations.
  * Used by CrazySupplierClient for automatic retry on transient failures.
  *
- * @author Flight Data Management Team
+ * @author Vítor Matosinho Martins
  * @version 1.0
  * @since 2025-10-24
  */

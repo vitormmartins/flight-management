@@ -18,7 +18,7 @@ import java.time.OffsetDateTime;
  * MapStruct mapper for Flight entity and DTOs.
  * Handles bidirectional mapping between domain entities and API DTOs.
  *
- * @author Flight Data Management Team
+ * @author Vítor Matosinho Martins
  * @version 1.0
  * @since 2025-10-24
  */

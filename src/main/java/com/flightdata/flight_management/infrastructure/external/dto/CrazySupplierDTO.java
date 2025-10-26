@@ -15,11 +15,15 @@ import java.time.LocalDateTime;
  * <p>CrazySupplier API uses CET (Central European Time) timezone for all date/time fields.
  * These DTOs handle the conversion between CET (external API) and UTC (internal storage).
  *
- * @author Flight Data Management Team
+ * @author Vítor Matosinho Martins
  * @version 1.0
  * @since 2025-10-24
  */
 public class CrazySupplierDTO {
+
+  private CrazySupplierDTO() {
+    throw new UnsupportedOperationException("CrazySupplierDTO is a utility holder and cannot be instantiated.");
+  }
 
   /**
    * Request DTO for CrazySupplier API.
