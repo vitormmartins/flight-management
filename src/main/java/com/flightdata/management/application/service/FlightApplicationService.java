@@ -209,11 +209,12 @@ public class FlightApplicationService {
     );
 
     // Convert database flights to response DTOs
-    List<FlightResponse> allFlights = databaseFlights.getContent().stream()
-            .map(flightMapper::toResponse)
-            .collect(Collectors.toCollection(ArrayList::new));
+    List<FlightResponse> pageFlights = databaseFlights.getContent()
+                                                     .stream()
+                                                     .map(flightMapper::toResponse)
+                                                     .collect(Collectors.toCollection(ArrayList::new));
 
-    log.debug("Found {} flights in database", allFlights.size());
+    log.debug("Found {} flights in database", databaseFlights.getContent().size());
 
     // Fetch from CrazySupplier if applicable
     if (shouldQueryCrazySupplier(origin, destination)) {
@@ -224,25 +225,33 @@ public class FlightApplicationService {
               timeRange.arrivalTo(),
               airline);
 
-      allFlights.addAll(crazySupplierFlights);
+      pageFlights.addAll(crazySupplierFlights);
       log.info("Combined {} database flights with {} CrazySupplier flights",
               databaseFlights.getContent().size(), crazySupplierFlights.size());
     }
 
-    // Build pagination info
+    // Build pagination info based on DATABASE results only
+    // Note: CrazySupplier results are added on top, but don't affect pagination
+    // This is because we cannot paginate external API results in the same way
     PaginationInfo paginationInfo = PaginationInfo.builder()
             .currentPage(databaseFlights.getNumber())
             .pageSize(databaseFlights.getSize())
-            .totalElements((long) allFlights.size())
-            .totalPages((int) Math.ceil((double) allFlights.size() / databaseFlights.getSize()))
+            .totalElements(databaseFlights.getTotalElements()) // Use database total
+            .totalPages(databaseFlights.getTotalPages())       // Use the database total pages
             .build();
 
     FlightSearchResponse response = FlightSearchResponse.builder()
-                                                        .flights(allFlights)
-                                                        .pagination(paginationInfo)
-                                                        .build();
+            .flights(pageFlights)
+            .pagination(paginationInfo)
+            .build();
 
-    log.info("Search completed. Returning {} total flights", allFlights.size());
+    log.info("Search completed. Returning {} total flights ({} from DB, {} from CrazySupplier). " +
+                    "Pagination based on {} database records across {} pages.",
+             pageFlights.size(),
+             databaseFlights.getContent().size(),
+             pageFlights.size() - databaseFlights.getContent().size(),
+             databaseFlights.getTotalElements(),
+             databaseFlights.getTotalPages());
 
     return response;
   }
